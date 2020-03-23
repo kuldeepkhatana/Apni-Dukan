@@ -5,7 +5,7 @@ click==7.1.1
 coreapi==2.3.3
 coreapi-cli==1.0.9
 coreschema==0.0.4
-Django==2.0
+Django==2.2.10
 django-rest-coreapi-schema==0.1.2
 django-rest-swagger==2.2.0
 djangorestframework==3.7.7
