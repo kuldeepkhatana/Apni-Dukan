@@ -7,6 +7,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
@@ -25,53 +26,50 @@ class CartDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartSerializer
 
 
-class AddOrderProduct(generics.CreateAPIView):
-    queryset = OrderProduct.objects.all()
-    serializer_class = OrderProductSerializer
+# class AddOrderProduct(generics.CreateAPIView):
+#     queryset = OrderProduct.objects.all()
+#     serializer_class = OrderProductSerializer
 
 
-class AddOrderProductDetail(generics.CreateAPIView):
-    queryset = OrderProduct.objects.all()
-    serializer_class = OrderProductSerializer
+# class AddOrderProductDetail(generics.CreateAPIView):
+#     queryset = OrderProduct.objects.all()
+#     serializer_class = OrderProductSerializer
 
 
-class SaveOderProductApiView(APIView):
+class AddCartApiView(APIView):
+    """API to save User Log Activity.
+
     """
-    API to save listings count View.
-    """
-    permission_classes = (AllowAny,)
-    rendered_classes = (JSONRenderer,)
+    # permission_classes = (AllowAny,)
+    # rendered_classes = (JSONRenderer,)
 
-    def post(self, request):
-        """
-        API to Place Order.
-        :param 1: cart_id
-        :param 2: Boolean Field
-        :return: Order Place Succesfully.
-        """
+
+    def post(request):
+        data = request.data
+
         try:
-            data = request.data
-            count = 0
-
             if 'cart' in data and data['cart'] != '':
                 cart = data['cart']
             else:
-                return Response({'msg': 'Cart id is required', 'status': 422})
+                return Response('Product missing', "", status=403)
 
+            # if 'order_place' in data and data['order_place'] == True:
+            #     if 'cart' in data and data['cart'] != '':
+            #         cart = data['cart']
+            #     else:
+            #         return Response(response.parsejson('cart is missing', "", status=403))
 
-            try:
-                listing_data_log = OrderProduct.objects.filter(cart_id=cart).first()
-                if listing_data_log is None:
-                    listing_data_log = OrderProduct()
-                    listing_data_log.cart_id = cart
-                    listing_data_log.oerder_plcae = oerder_plcae
-                    listing_data_log.save()
-                return Response({'msg':'Success', 'status': 200})
-            except Exception as error:
-                return Response({"msg": 'Please provide all details', 'status': 422})
+                
+            activity_data = OrderProduct.objects.filter(cart=cart).first()
 
+            if activity_data is None:
+                temp_data = OrderProduct()
+                temp_data.order_place = order_place
+                temp_data.cart_id = cart.object.first()
+                temp_data.save()
+            
+            return Response("Success", status=201)
 
-
-
-
+        except Exception as exp:
+            return Response(exp, status=403)
 

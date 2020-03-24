@@ -12,12 +12,21 @@ class CartSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderProductSerializer(serializers.ModelSerializer):
-    cart = CartSerializer()
+    cart = CartSerializer(many=True)
     oerder_plcae = serializers.BooleanField(write_only=True)
     class Meta:
 
         model = OrderProduct
         fields = ('id','oerder_plcae','cart')
+
+        def create(self, validated_data):
+            cart_data = validated_data.pop('cart')
+            order_data = OrderProduct.objects.create(**validated_data)
+
+            for cart in cart_data:
+                cart, created = Cart.objects.get_or_create(name=cart['name'])
+                order_data.cart.add(cart)
+            return order_data
 
 
 

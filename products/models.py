@@ -24,6 +24,7 @@ class Cart(models.Model):
     price = models.DecimalField(default=0.00, max_digits=15, decimal_places=2)
 
 
+
     class Meta:
         db_table = 'cart'
 
@@ -58,7 +59,7 @@ class Coupon(models.Model):
 class OrderProduct(models.Model):
     """This model is used for create an order from a cart"""
     cart_id = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    oerder_plcae = models.BooleanField(default=False)
+    order_place = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'orderproduct'
